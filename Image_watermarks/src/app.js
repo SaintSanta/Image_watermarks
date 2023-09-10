@@ -25,7 +25,10 @@ let useDefaultWatermark = false;
 
 imageInput.addEventListener("change", function (event) {
     selectedImage = event.target.files[0];
-    if (selectedImage) {
+    if (selectedImage && userWatermark) {
+        watermarkInput.style.display = "block";
+        exportButton.disabled = false;
+    } else if (selectedImage) {
         watermarkInput.style.display = "block";
     }
     updatePreview();
@@ -36,15 +39,26 @@ watermarkInput.addEventListener("change", function (event) {
     useUserWatermark = true;
     useDefaultWatermark = false;
     if (userWatermark) {
-        opacitySlider.style.display = "block";
-        exportButton.disabled = false;
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            userWatermarkImg.src = e.target.result;
-            updatePreview();
-        };
-        reader.readAsDataURL(userWatermark);
-    } else {
+        if (selectedImage) {
+            opacitySlider.style.display = "block";
+            exportButton.disabled = false;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                userWatermarkImg.src = e.target.result;
+                updatePreview();
+            };
+            reader.readAsDataURL(userWatermark);
+        } else {
+            opacitySlider.style.display = "block";
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                userWatermarkImg.src = e.target.result;
+                updatePreview();
+            };
+            reader.readAsDataURL(userWatermark);
+        }
+    }
+    else {
         userWatermarkImg.src = "";
         updatePreview();
     }
@@ -52,13 +66,17 @@ watermarkInput.addEventListener("change", function (event) {
 
 const defaultWatermarkButtons = document.querySelectorAll("[id^='defaultWatermark']");
 
-defaultWatermarkButtons.forEach(function (button) {
-    button.addEventListener("click", function () {
+defaultWatermarkButtons.forEach((button) => {
+    button.addEventListener("click", () => {
         const defaultWatermarkSrc = button.querySelector("img").getAttribute("src");
         useDefaultWatermark = true;
         useUserWatermark = false;
         defaultWatermarkImg.src = defaultWatermarkSrc;
         updatePreview();
+
+        if (selectedImage && useDefaultWatermark) {
+            exportButton.disabled = false;
+        }
     });
 });
 
@@ -158,11 +176,6 @@ function updatePreview() {
 }
 
 exportButton.addEventListener("click", () => {
-    if (!previewImage.src) {
-        alert("Пожалуйста, создайте предварительный просмотр изображения.");
-        return;
-    }
-
     const a = document.createElement("a");
     a.href = previewImage.src;
     a.download = "image_with_watermark.png";
