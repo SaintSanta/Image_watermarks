@@ -53,6 +53,11 @@ body {
   display: flex;
   flex-direction: column;
   max-width: 300px;
+  gap: 10px;
+}
+
+#exportButton {
+  margin-top: 10px;
 }
 
 .previewImageWrapper {
