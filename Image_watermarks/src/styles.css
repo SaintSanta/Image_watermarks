@@ -1,6 +1,67 @@
 body {
   font-family: Arial, sans-serif;
   text-align: center;
+  background-image: url("/src/assets/watermark_background.svg");
+  background-repeat: repeat;
+}
+
+.logo img {
+  width: 300px;
+}
+
+.appWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  gap: 20px;
+}
+
+.originalPhoto {
+  width: 300px;
+  border: 2px solid red;
+}
+
+.customFileUpload {
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+  background-color: #f2f2f2;
+  border-radius: 4px;
+}
+
+.customFileUpload:hover {
+  background-color: #e2e2e2;
+}
+
+.defaultWatermarks {
+  padding: 10px 0;
+  max-width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  columns: 1fr 1fr;
+}
+
+.defaultWatermark {
+  width: 70px;
+  height: 70px;
+}
+
+.watermarkSettings {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+}
+
+.previewImageWrapper {
+  display: flex;
+  max-width: 1400px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: rgb(250, 250, 249);
 }
 
 #previewImage {
@@ -9,19 +70,14 @@ body {
   margin-top: 20px;
 }
 
-button {
-  margin-top: 10px;
-}
+@media (max-width: 768px) {
+  .appWrapper {
+    flex-direction: column;
+  }
 
-.original-photo {
-  border: 2px solid red;
-}
-
-.watermark {
-  border: 2px solid blue;
-}
-
-.defaultWatermark {
-  width: 100px;
-  height: 100px;
+  .uploadWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }

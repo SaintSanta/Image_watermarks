@@ -1,7 +1,6 @@
 const imageInput = document.getElementById("imageInput");
 const watermarkInput = document.getElementById("watermarkInput");
 const opacitySlider = document.getElementById("opacitySlider");
-const previewButton = document.getElementById("previewButton");
 const exportButton = document.getElementById("exportButton");
 const previewArea = document.getElementById("previewArea");
 const previewImage = document.getElementById("previewImage");
@@ -9,6 +8,10 @@ const horizontalSlider = document.getElementById("horizontalSlider");
 const verticalSlider = document.getElementById("verticalSlider");
 const scaleSlider = document.getElementById("scaleSlider");
 const rotateAngleInput = document.getElementById("rotateAngle");
+const previewImageWrapper = document.querySelector(".previewImageWrapper");
+const previewAreaText = document.querySelector(".previewAreaText");
+const watermarkButton = document.querySelector(".customFileUpload");
+const defaultWatermarkButtons = document.querySelectorAll("[id^='defaultWatermark']");
 const userWatermarkImg = new Image();
 const defaultWatermarkImg = new Image();
 
@@ -23,18 +26,29 @@ let rotateAngle = 0;
 let useUserWatermark = false;
 let useDefaultWatermark = false;
 
+previewImageWrapper.addEventListener("click", () => {
+    const imageInput = document.getElementById("imageInput");
+    imageInput.click();
+});
+
+watermarkButton.addEventListener("click", () => {
+    const watermarkInput = document.getElementById("watermarkInput");
+    watermarkInput.click();
+});
+
 imageInput.addEventListener("change", function (event) {
     selectedImage = event.target.files[0];
+    previewImage.style.display = "block";
     if (selectedImage && userWatermark) {
-        watermarkInput.style.display = "block";
+        previewAreaText.style.display = "none"
         exportButton.disabled = false;
     } else if (selectedImage) {
-        watermarkInput.style.display = "block";
+        previewAreaText.style.display = "none"
     }
     updatePreview();
 });
 
-watermarkInput.addEventListener("change", function (event) {
+watermarkInput.addEventListener("change", (event) => {
     userWatermark = event.target.files[0];
     useUserWatermark = true;
     useDefaultWatermark = false;
@@ -57,14 +71,11 @@ watermarkInput.addEventListener("change", function (event) {
             };
             reader.readAsDataURL(userWatermark);
         }
-    }
-    else {
+    } else {
         userWatermarkImg.src = "";
         updatePreview();
     }
 });
-
-const defaultWatermarkButtons = document.querySelectorAll("[id^='defaultWatermark']");
 
 defaultWatermarkButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -82,14 +93,6 @@ defaultWatermarkButtons.forEach((button) => {
 
 opacitySlider.addEventListener("input", function (event) {
     watermarkOpacity = parseFloat(event.target.value);
-    updatePreview();
-});
-
-previewButton.addEventListener("click", function () {
-    if (!selectedImage || (!userWatermark && !useDefaultWatermark)) {
-        alert("Пожалуйста, выберите изображение и водяной знак.");
-        return;
-    }
     updatePreview();
 });
 
@@ -124,7 +127,7 @@ function updatePreview() {
         img.src = event.target.result;
         img.onload = function () {
             const canvas = document.createElement("canvas");
-            const maxWidth = 800;
+            const maxWidth = 1280;
             if (img.width > maxWidth) {
                 const scaleFactor = maxWidth / img.width;
                 canvas.width = maxWidth;
