@@ -1,3 +1,5 @@
-export default {
-  base: '/src/', 
-}
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  base: './', 
+})
